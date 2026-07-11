@@ -12,27 +12,12 @@ jobs:
       - name: سحب الكود
         uses: actions/checkout@v4
 
-      - name: تثبيت بايثون
-        uses: actions/setup-python@v5
+      - name: بناء ملف APK داخل بيئة معزولة جاهزة
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
         with:
-          python-version: '3.11'
-
-      - name: تثبيت أدوات النظام المطلوبة لـ Buildozer
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y git zip unzip openjdk-17-jdk python3-pip autoconf libtool \
-            pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev cmake libffi-dev libssl-dev
-
-      - name: تثبيت Buildozer وCython
-        run: |
-          pip install --upgrade pip
-          pip install buildozer cython==0.29.36
-
-      - name: بناء ملف APK
-        run: |
-          yes | buildozer android debug
-        env:
-          ANDROID_ACCEPT_SDK_LICENSE: "y"
+          workdir: .
+          buildozer_version: stable
 
       - name: رفع ملف APK كمرفق للتحميل
         uses: actions/upload-artifact@v4
